@@ -13,11 +13,18 @@ public class Main {
         //scanner accepts (,) as decimal separator in my settings)
         byte years = (byte) readNumber("Period (Years): ", 1, 30, scanner);
 
+        printMortgage(principal, annualRate, years);
+        printPaymentSchedule(principal, annualRate, years);
+    }
+
+    public static void printMortgage(int principal, float annualRate, byte years) {
         double monthlyPayment = calculateMortgage(principal, annualRate, years);
         System.out.print("\nMORTGAGE\n");
         System.out.println("--------");
         System.out.println("Monthly Payments: " + NumberFormat.getCurrencyInstance().format(monthlyPayment));
+    }
 
+    public static void printPaymentSchedule(int principal, float annualRate, byte years) {
         System.out.println();
         System.out.println("PAYMENT SCHEDULE");
         System.out.println("----------------");
