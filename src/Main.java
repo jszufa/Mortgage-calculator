@@ -2,6 +2,9 @@ import java.text.NumberFormat;
 import java.util.Scanner;
 
 public class Main {
+    final static byte MONTHS_IN_YEAR = 12;
+    final static byte PERCENT = 100;
+
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
@@ -11,7 +14,17 @@ public class Main {
         byte years = (byte) readNumber("Period (Years): ", 1, 30, scanner);
 
         double monthlyPayment = calculateMortgage(principal, annualRate, years);
-        System.out.print("Mortgage: " + NumberFormat.getCurrencyInstance().format(monthlyPayment));
+        System.out.print("\nMORTGAGE\n");
+        System.out.println("--------");
+        System.out.println("Monthly Payments: " + NumberFormat.getCurrencyInstance().format(monthlyPayment));
+
+        System.out.println();
+        System.out.println("PAYMENT SCHEDULE");
+        System.out.println("----------------");
+        for (short i = 0; i <= years * MONTHS_IN_YEAR; i++) {
+            double balance = calculateBalance(principal, annualRate, years, i);
+            System.out.println(NumberFormat.getCurrencyInstance().format(balance));
+        }
     }
 
     public static double readNumber(
@@ -36,9 +49,6 @@ public class Main {
             float annualInterest,
             byte years
     ) {
-        final byte MONTHS_IN_YEAR = 12;
-        final byte PERCENT = 100;
-
         float monthlyRate = annualInterest / MONTHS_IN_YEAR / PERCENT;
 
         //FROM EQUATION
@@ -46,4 +56,20 @@ public class Main {
         return principal * monthlyRate * powExpression / (powExpression - 1);
     }
 
+    public static double calculateBalance(
+            int principal,
+            float annualInterest,
+            byte years,
+            short numberOfPaymentsDone
+    ) {
+        final int NUMBER_OF_PAYMENTS = years * 12;
+        float monthlyRate = annualInterest / MONTHS_IN_YEAR / PERCENT;
+
+        double balance = principal
+                * (Math.pow(1 + monthlyRate, NUMBER_OF_PAYMENTS) - Math.pow(1 + monthlyRate, numberOfPaymentsDone))
+                / (Math.pow(1 + monthlyRate, NUMBER_OF_PAYMENTS) - 1);
+
+        return balance;
+
+    }
 }
